@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Тренировка скорости печати</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    
+    h1 {
+      color: #333;
+    }
+    
+    #word {
+      font-size: 36px;
+      font-weight: bold;
+      margin-bottom: 20px;
+    }
+    
+    #input {
+      font-size: 24px;
+      padding: 8px;
+      margin-bottom: 20px;
+      width: 300px;
+      text-align: center;
+    }
+    
+    #hint {
+      font-size: 16px;
+      padding: 6px 12px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    
+    #hint:hover {
+      background-color: #45a049;
+    }
+    
+    #hintText {
+      font-size: 20px;
+      font-style: italic;
+      color: #777;
+      margin-top: 10px;
+    }
+    
+    #result {
+      font-size: 24px;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Тренировка скорости печати</h1>
+  <div id="word"></div>
+  <input type="text" id="input" autofocus>
+  <br>
+  <button id="hint">Подсказка</button>
+  <div id="hintText"></div>
+  <div id="result"></div>
+  
+  <script src="words.js"></script>
+  <script>
+    var currentIndex;
+    var currentWord;
+    var wordElement = document.getElementById('word');
+    var inputElement = document.getElementById('input');
+    var hintButton = document.getElementById('hint');
+    var hintTextElement = document.getElementById('hintText');
+    var resultElement = document.getElementById('result');
+    
+    var startTime;
+    var endTime;
+    var correctCount = 0;
+    var minutePassed = false;
+    
+    function getRandomWord() {
+      currentIndex = Math.floor(Math.random() * words.length);
+      currentWord = words[currentIndex];
+      displayWord();
+    }
+    
+    function displayWord() {
+      wordElement.textContent = currentWord.word;
+    }
+    
+    function checkInput() {
+      var input = inputElement.value.trim();
+      if (input === currentWord.antonym) {
+        inputElement.value = '';
+        hintTextElement.textContent = '';
+        correctCount++;
+        getRandomWord();
+      }
+    }
+    
+    function showHint() {
+      hintTextElement.textContent = 'Подсказка: ' + currentWord.antonym;
+    }
+    
+    function startTimer() {
+      startTime = new Date();
+    }
+    
+    function endTimer() {
+      endTime = new Date();
+      minutePassed = true;
+      var timeDiff = endTime - startTime;
+      var minutesPassed = Math.floor(timeDiff / 60000);
+      if (minutesPassed > 0) {
+        var wordsPerMinute = Math.round(correctCount / minutesPassed);
+        resultElement.textContent = 'Ваш результат: ' + wordsPerMinute + ' слов в минуту';
+      }
+    }
+    
+    inputElement.addEventListener('input', checkInput);
+    hintButton.addEventListener('click', showHint);
+    inputElement.addEventListener('focus', startTimer);
+    inputElement.addEventListener('blur', endTimer);
+    
+    // Запуск тренировки
+    getRandomWord();
+  </script>
+</body>
+</html>
